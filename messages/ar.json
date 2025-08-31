@@ -1,0 +1,43 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجح",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "add": "إضافة",
+    "create": "إنشاء",
+    "import": "استيراد",
+    "export": "تصدير",
+    "language": "اللغة"
+  },
+  "navigation": {
+    "dashboard": "لوحة التحكم",
+    "accounts": "الحسابات",
+    "transactions": "المعاملات",
+    "budgets": "الميزانيات",
+    "receiptScanner": "ماسح الإيصالات",
+    "csvImport": "استيراد CSV",
+    "analytics": "التحليلات",
+    "reports": "التقارير"
+  },
+  "csvImport": {
+    "title": "استيراد CSV",
+    "subtitle": "استيراد بياناتك المالية من ملفات CSV",
+    "uploadFile": "رفع ملف CSV",
+    "dragDrop": "اسحب وأفلت ملف CSV هنا",
+    "selectFile": "اختر ملف",
+    "preview": "معاينة البيانات",
+    "import": "استيراد البيانات",
+    "mapping": "تخطيط الأعمدة",
+    "date": "التاريخ",
+    "description": "الوصف",
+    "amount": "المبلغ",
+    "type": "النوع",
+    "category": "الفئة"
+  }
+}
+
+

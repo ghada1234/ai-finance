@@ -1,0 +1,41 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "create": "Create",
+    "import": "Import",
+    "export": "Export",
+    "language": "Language"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "accounts": "Accounts",
+    "transactions": "Transactions",
+    "budgets": "Budgets",
+    "receiptScanner": "Receipt Scanner",
+    "csvImport": "CSV Import",
+    "analytics": "Analytics",
+    "reports": "Reports"
+  },
+  "csvImport": {
+    "title": "Import CSV",
+    "subtitle": "Import your financial data from CSV files",
+    "uploadFile": "Upload CSV File",
+    "dragDrop": "Drag and drop your CSV file here",
+    "selectFile": "Select File",
+    "preview": "Preview Data",
+    "import": "Import Data",
+    "mapping": "Column Mapping",
+    "date": "Date",
+    "description": "Description",
+    "amount": "Amount",
+    "type": "Type",
+    "category": "Category"
+  }
+}
