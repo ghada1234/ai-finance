@@ -71,33 +71,21 @@ async function extractTextFromImage(imageBase64: string): Promise<string> {
     const result = await response.json();
     
     if (result.IsErroredOnProcessing) {
+      console.error('OCR API error:', result.ErrorMessage);
       throw new Error('OCR processing failed');
     }
     
-    return result.ParsedResults?.[0]?.ParsedText || '';
+    const extractedText = result.ParsedResults?.[0]?.ParsedText || '';
+    console.log('OCR extracted text:', extractedText);
+    
+    if (!extractedText.trim()) {
+      throw new Error('No text extracted from image');
+    }
+    
+    return extractedText;
   } catch (error) {
     console.error('OCR error:', error);
-    // Return sample text for demonstration
-    return `WALMART
-123 MAIN ST
-CITY, STATE 12345
-TEL: (555) 123-4567
-
-RECEIPT #: 123456789
-DATE: ${new Date().toLocaleDateString()}
-TIME: ${new Date().toLocaleTimeString()}
-
-ITEMS:
-Milk 2.99
-Bread 1.99
-Eggs 3.49
-Bananas 2.99
-
-SUBTOTAL: 11.46
-TAX: 0.92
-TOTAL: 12.38
-
-THANK YOU FOR SHOPPING!`;
+    throw error; // Don't return mock data, let the error propagate
   }
 }
 
@@ -142,6 +130,7 @@ async function analyzeReceiptText(text: string): Promise<any> {
 
 // Manual text parsing as fallback
 function parseReceiptTextManually(text: string): any {
+  console.log('Parsing text manually:', text);
   const lines = text.split('\n').map(line => line.trim()).filter(line => line);
   
   let merchant = '';
@@ -153,50 +142,97 @@ function parseReceiptTextManually(text: string): any {
   let receiptNumber = '';
   let address = '';
   
-  // Extract merchant (usually first line)
-  if (lines.length > 0) {
-    merchant = lines[0];
-  }
-  
-  // Extract total (look for TOTAL or similar)
-  const totalLine = lines.find(line => 
-    line.toUpperCase().includes('TOTAL') && 
-    /\d+\.\d{2}/.test(line)
-  );
-  if (totalLine) {
-    const totalMatch = totalLine.match(/(\d+\.\d{2})/);
-    if (totalMatch) {
-      total = parseFloat(totalMatch[1]);
+  // Extract merchant (usually first line, but skip common header words)
+  const skipWords = ['RECEIPT', 'THANK', 'WELCOME', 'PURCHASE', 'SALE'];
+  for (let i = 0; i < Math.min(5, lines.length); i++) {
+    const line = lines[i].toUpperCase();
+    if (!skipWords.some(word => line.includes(word)) && line.length > 2) {
+      merchant = lines[i];
+      break;
     }
   }
   
-  // Extract items (lines with prices)
-  lines.forEach(line => {
-    const priceMatch = line.match(/(\d+\.\d{2})$/);
-    if (priceMatch && !line.toUpperCase().includes('TOTAL') && !line.toUpperCase().includes('TAX')) {
+  // Extract total (look for TOTAL, AMOUNT, BALANCE, etc.)
+  const totalPatterns = [
+    /TOTAL.*?(\d+\.\d{2})/i,
+    /AMOUNT.*?(\d+\.\d{2})/i,
+    /BALANCE.*?(\d+\.\d{2})/i,
+    /(\d+\.\d{2})\s*TOTAL/i,
+    /(\d+\.\d{2})\s*AMOUNT/i
+  ];
+  
+  for (const pattern of totalPatterns) {
+    const match = text.match(pattern);
+    if (match) {
+      total = parseFloat(match[1]);
+      break;
+    }
+  }
+  
+  // If no total found, look for the largest number that could be a total
+  if (total === 0) {
+    const allNumbers = text.match(/\d+\.\d{2}/g);
+    if (allNumbers) {
+      const numbers = allNumbers.map(n => parseFloat(n)).sort((a, b) => b - a);
+      total = numbers[0]; // Assume the largest number is the total
+    }
+  }
+  
+  // Extract items (lines with prices, but not totals or taxes)
+  const itemLines = lines.filter(line => {
+    const hasPrice = /\d+\.\d{2}/.test(line);
+    const isTotal = /TOTAL|AMOUNT|BALANCE|TAX|SUBTOTAL/i.test(line);
+    const isHeader = /RECEIPT|THANK|WELCOME|PURCHASE|SALE|DATE|TIME/i.test(line);
+    return hasPrice && !isTotal && !isHeader;
+  });
+  
+  itemLines.forEach(line => {
+    const priceMatch = line.match(/(\d+\.\d{2})/);
+    if (priceMatch) {
       const price = parseFloat(priceMatch[1]);
       const name = line.replace(priceMatch[0], '').trim();
-      if (name && price > 0) {
+      if (name && price > 0 && price < total) { // Price should be less than total
         items.push({ name, price, quantity: 1 });
       }
     }
   });
   
-  // Extract date
-  const dateMatch = text.match(/(\d{1,2}\/\d{1,2}\/\d{2,4})|(\d{4}-\d{2}-\d{2})/);
-  if (dateMatch) {
-    date = dateMatch[0];
+  // Extract date (multiple formats)
+  const datePatterns = [
+    /(\d{1,2}\/\d{1,2}\/\d{2,4})/,
+    /(\d{4}-\d{2}-\d{2})/,
+    /(\d{1,2}-\d{1,2}-\d{2,4})/,
+    /DATE.*?(\d{1,2}\/\d{1,2}\/\d{2,4})/i
+  ];
+  
+  for (const pattern of datePatterns) {
+    const match = text.match(pattern);
+    if (match) {
+      date = match[1];
+      break;
+    }
   }
   
   // Extract receipt number
-  const receiptMatch = text.match(/RECEIPT.*?(\d+)/i);
-  if (receiptMatch) {
-    receiptNumber = receiptMatch[1];
+  const receiptPatterns = [
+    /RECEIPT.*?(\d+)/i,
+    /#.*?(\d+)/i,
+    /TRANS.*?(\d+)/i
+  ];
+  
+  for (const pattern of receiptPatterns) {
+    const match = text.match(pattern);
+    if (match) {
+      receiptNumber = match[1];
+      break;
+    }
   }
   
   // Calculate subtotal and tax
   subtotal = items.reduce((sum, item) => sum + item.price, 0);
-  tax = total - subtotal;
+  tax = Math.max(0, total - subtotal);
+  
+  console.log('Parsed data:', { merchant, total, date, items, tax, subtotal, receiptNumber });
   
   return {
     merchant,
@@ -283,40 +319,22 @@ function calculateConfidence(analysis: any, merchantInfo: any): number {
   return Math.min(confidence, 95);
 }
 
-// Fallback data generator
+// Fallback data generator - only used when OCR completely fails
 function generateFallbackData(): ReceiptData {
-  const merchants = [
-    { name: "Walmart", category: "Shopping", confidence: 95 },
-    { name: "Target", category: "Shopping", confidence: 92 },
-    { name: "Kroger", category: "Food & Dining", confidence: 94 },
-    { name: "Safeway", category: "Food & Dining", confidence: 91 },
-    { name: "Shell", category: "Transportation", confidence: 89 },
-    { name: "Exxon", category: "Transportation", confidence: 87 },
-    { name: "Netflix", category: "Entertainment", confidence: 98 },
-    { name: "Amazon", category: "Shopping", confidence: 96 },
-    { name: "Starbucks", category: "Food & Dining", confidence: 93 },
-    { name: "McDonald's", category: "Food & Dining", confidence: 90 }
-  ];
+  console.log('Generating fallback data due to OCR failure');
   
-  const selectedMerchant = merchants[Math.floor(Math.random() * merchants.length)];
-  const total = Math.round((Math.random() * 200 + 20) * 100) / 100;
-  const tax = Math.round(total * 0.08 * 100) / 100;
-  const subtotal = Math.round((total - tax) * 100) / 100;
-  
-  // Generate mock items based on merchant category
-  const items = generateMockItems(selectedMerchant.category, subtotal);
-  
+  // Use a consistent fallback instead of random data
   return {
-    merchant: selectedMerchant.name,
-    total,
+    merchant: "Unknown Merchant",
+    total: 0,
     date: new Date().toISOString().split('T')[0],
-    items,
-    category: selectedMerchant.category,
-    confidence: selectedMerchant.confidence,
-    tax,
-    subtotal,
-    receiptNumber: `R${Date.now().toString().slice(-6)}`,
-    address: generateMockAddress(selectedMerchant.name)
+    items: [],
+    category: "Other",
+    confidence: 10, // Very low confidence for fallback data
+    tax: 0,
+    subtotal: 0,
+    receiptNumber: "",
+    address: ""
   };
 }
 

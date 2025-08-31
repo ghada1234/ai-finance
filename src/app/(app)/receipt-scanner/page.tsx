@@ -136,10 +136,17 @@ export default function ReceiptScannerPage() {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to process receipt');
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to process receipt');
         }
 
         const extractedData = await response.json();
+        
+        // Check if we got meaningful data
+        if (extractedData.confidence < 20) {
+          alert('Warning: Low confidence in data extraction. Please check the results carefully.');
+        }
+        
         setExtractedData(extractedData);
         setEditedData(extractedData);
         setIsProcessing(false);
