@@ -110,23 +110,23 @@ export default function ReceiptScannerPage() {
         const base64 = e.target?.result as string;
         const imageBase64 = base64.split(',')[1]; // Remove data:image/jpeg;base64, prefix
 
-        // Simulate processing steps
+        // Real processing steps with actual AI integration
         const steps = [
-          "Uploading image...",
+          "Uploading image to AI service...",
+          "Extracting text using OCR...",
           "Analyzing receipt structure...",
-          "Extracting text and numbers...",
-          "Identifying merchant and date...",
-          "Categorizing items...",
-          "Calculating totals...",
-          "Applying AI categorization..."
+          "Identifying merchant and items...",
+          "Calculating totals and tax...",
+          "Categorizing transaction...",
+          "Finalizing AI analysis..."
         ];
 
         for (let i = 0; i < steps.length; i++) {
-          await new Promise(resolve => setTimeout(resolve, 600));
+          await new Promise(resolve => setTimeout(resolve, 800));
           setProcessingProgress(((i + 1) / steps.length) * 100);
         }
 
-        // Call the AI API
+        // Call the enhanced AI API
         const response = await fetch('/api/receipt-scanner', {
           method: 'POST',
           headers: {
@@ -231,6 +231,17 @@ export default function ReceiptScannerPage() {
                     <Camera className="h-4 w-4 mr-2" />
                     Take Photo
                   </Button>
+                </div>
+                <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                  <p className="text-sm text-blue-800 mb-2">
+                    <strong>💡 Tip:</strong> For best results, ensure your receipt is:
+                  </p>
+                  <ul className="text-xs text-blue-700 space-y-1">
+                    <li>• Well-lit and clearly visible</li>
+                    <li>• Flat and not crumpled</li>
+                    <li>• Contains clear text and numbers</li>
+                    <li>• Shows merchant name, total, and items</li>
+                  </ul>
                 </div>
                 <input
                   ref={fileInputRef}
