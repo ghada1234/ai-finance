@@ -72,7 +72,7 @@ export default function DashboardPage() {
           Welcome back, {user?.firstName || 'User'}!
         </h1>
         <p className="text-gray-600">
-          Here's an overview of your financial health
+          Here&apos;s an overview of your financial health
         </p>
       </div>
 

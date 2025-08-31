@@ -164,7 +164,7 @@ export default function CSVImportPage() {
     // Simulate import process
     const totalRows = csvData.rows.length;
     let imported = 0;
-    let skipped = 0;
+    const skipped = 0;
     let errors = 0;
 
     for (let i = 0; i < totalRows; i++) {

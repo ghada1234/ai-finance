@@ -18,7 +18,7 @@ export default function NotFound() {
         </CardHeader>
         <CardContent className="text-center space-y-4">
           <p className="text-sm text-gray-600">
-            Sorry, we couldn't find the page you were looking for. It might have been moved, deleted, or you entered the wrong URL.
+            Sorry, we couldn&apos;t find the page you were looking for. It might have been moved, deleted, or you entered the wrong URL.
           </p>
           <div className="flex gap-2 justify-center">
             <Button asChild className="flex items-center gap-2">
