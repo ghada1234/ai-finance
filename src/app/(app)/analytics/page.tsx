@@ -253,17 +253,17 @@ export default function AnalyticsPage() {
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-2">
-          <Brain className="h-8 w-8 text-blue-600" />
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 flex items-center gap-2">
+          <Brain className="h-6 w-6 md:h-8 md:w-8 text-blue-600" />
           Smart Analytics
         </h1>
-        <p className="text-gray-600">
+        <p className="text-gray-600 text-sm md:text-base">
           AI-powered insights and recommendations to help you make better financial decisions
         </p>
       </div>
 
       {/* Monthly Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Current Month Spending</CardTitle>
@@ -314,11 +314,11 @@ export default function AnalyticsPage() {
       </div>
 
       <Tabs defaultValue="insights" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="insights">AI Insights</TabsTrigger>
-          <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
-          <TabsTrigger value="trends">Spending Trends</TabsTrigger>
-          <TabsTrigger value="breakdown">Category Breakdown</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-2">
+          <TabsTrigger value="insights" className="text-xs md:text-sm">AI Insights</TabsTrigger>
+          <TabsTrigger value="recommendations" className="text-xs md:text-sm">Recommendations</TabsTrigger>
+          <TabsTrigger value="trends" className="text-xs md:text-sm">Trends</TabsTrigger>
+          <TabsTrigger value="breakdown" className="text-xs md:text-sm">Breakdown</TabsTrigger>
         </TabsList>
 
         <TabsContent value="insights" className="space-y-6">

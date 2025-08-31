@@ -257,20 +257,20 @@ export default function ReportsPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-2">
-            <FileText className="h-8 w-8 text-blue-600" />
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 flex items-center gap-2">
+            <FileText className="h-6 w-6 md:h-8 md:w-8 text-blue-600" />
             Monthly Report
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 text-sm md:text-base">
             AI-generated insights and analysis for {reportData.month} {reportData.year}
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
           <div className="flex items-center gap-2">
             <Select value={selectedMonth.toString()} onValueChange={(value) => setSelectedMonth(parseInt(value))}>
-              <SelectTrigger className="w-32">
+              <SelectTrigger className="w-28 md:w-32">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -282,7 +282,7 @@ export default function ReportsPage() {
               </SelectContent>
             </Select>
             <Select value={selectedYear.toString()} onValueChange={(value) => setSelectedYear(parseInt(value))}>
-              <SelectTrigger className="w-24">
+              <SelectTrigger className="w-20 md:w-24">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -294,14 +294,16 @@ export default function ReportsPage() {
               </SelectContent>
             </Select>
           </div>
-          <Button variant="outline">
-            <Download className="h-4 w-4 mr-2" />
-            Export PDF
-          </Button>
-          <Button variant="outline">
-            <Share2 className="h-4 w-4 mr-2" />
-            Share
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" className="text-xs">
+              <Download className="h-3 w-3 mr-1 md:mr-2" />
+              <span className="hidden sm:inline">Export PDF</span>
+            </Button>
+            <Button variant="outline" size="sm" className="text-xs">
+              <Share2 className="h-3 w-3 mr-1 md:mr-2" />
+              <span className="hidden sm:inline">Share</span>
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -369,12 +371,12 @@ export default function ReportsPage() {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="insights">AI Insights</TabsTrigger>
-          <TabsTrigger value="breakdown">Category Breakdown</TabsTrigger>
-          <TabsTrigger value="trends">Spending Trends</TabsTrigger>
-          <TabsTrigger value="goals">Goals</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+          <TabsTrigger value="overview" className="text-xs md:text-sm">Overview</TabsTrigger>
+          <TabsTrigger value="insights" className="text-xs md:text-sm">AI Insights</TabsTrigger>
+          <TabsTrigger value="breakdown" className="text-xs md:text-sm">Breakdown</TabsTrigger>
+          <TabsTrigger value="trends" className="text-xs md:text-sm">Trends</TabsTrigger>
+          <TabsTrigger value="goals" className="text-xs md:text-sm">Goals</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
