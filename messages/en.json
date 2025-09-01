@@ -11,7 +11,23 @@
     "create": "Create",
     "import": "Import",
     "export": "Export",
-    "language": "Language"
+    "language": "Language",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "income": "Income",
+    "expense": "Expense",
+    "amount": "Amount",
+    "date": "Date",
+    "description": "Description",
+    "category": "Category",
+    "type": "Type",
+    "status": "Status",
+    "actions": "Actions",
+    "total": "Total",
+    "remaining": "Remaining",
+    "spent": "Spent",
+    "balance": "Balance"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -22,6 +38,183 @@
     "csvImport": "CSV Import",
     "analytics": "Analytics",
     "reports": "Reports"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back!",
+    "summary": "Financial Summary",
+    "totalBalance": "Total Balance",
+    "totalIncome": "Total Income",
+    "totalExpenses": "Total Expenses",
+    "recentTransactions": "Recent Transactions",
+    "budgetOverview": "Budget Overview",
+    "addTransaction": "Add Transaction",
+    "editTransaction": "Edit Transaction",
+    "transactionForm": {
+      "title": "Transaction Details",
+      "description": "Description",
+      "amount": "Amount",
+      "type": "Type",
+      "category": "Category",
+      "date": "Date",
+      "notes": "Notes"
+    },
+    "categories": {
+      "food": "Food & Dining",
+      "transport": "Transportation",
+      "shopping": "Shopping",
+      "entertainment": "Entertainment",
+      "health": "Healthcare",
+      "education": "Education",
+      "utilities": "Utilities",
+      "other": "Other"
+    }
+  },
+  "accounts": {
+    "title": "Accounts",
+    "manageAccounts": "Manage Your Accounts",
+    "totalBalance": "Total Balance",
+    "addAccount": "Add Account",
+    "editAccount": "Edit Account",
+    "accountForm": {
+      "title": "Account Details",
+      "name": "Account Name",
+      "type": "Account Type",
+      "balance": "Initial Balance",
+      "currency": "Currency",
+      "notes": "Notes"
+    },
+    "types": {
+      "checking": "Checking Account",
+      "savings": "Savings Account",
+      "credit": "Credit Card",
+      "investment": "Investment Account",
+      "cash": "Cash",
+      "other": "Other"
+    }
+  },
+  "transactions": {
+    "title": "Transactions",
+    "manageTransactions": "Manage Your Transactions",
+    "totalBalance": "Total Balance",
+    "totalIncome": "Total Income",
+    "totalExpenses": "Total Expenses",
+    "addTransaction": "Add Transaction",
+    "editTransaction": "Edit Transaction",
+    "exportTransactions": "Export Transactions",
+    "filters": {
+      "search": "Search transactions...",
+      "type": "Filter by type",
+      "category": "Filter by category"
+    },
+    "transactionForm": {
+      "title": "Transaction Details",
+      "description": "Description",
+      "amount": "Amount",
+      "type": "Type",
+      "category": "Category",
+      "date": "Date",
+      "account": "Account",
+      "notes": "Notes"
+    }
+  },
+  "budgets": {
+    "title": "Budgets",
+    "manageBudgets": "Manage Your Budgets",
+    "totalBudget": "Total Budget",
+    "totalSpent": "Total Spent",
+    "totalRemaining": "Total Remaining",
+    "addBudget": "Add Budget",
+    "editBudget": "Edit Budget",
+    "budgetForm": {
+      "title": "Budget Details",
+      "name": "Budget Name",
+      "amount": "Budget Amount",
+      "category": "Category",
+      "period": "Period",
+      "notes": "Notes"
+    },
+    "periods": {
+      "monthly": "Monthly",
+      "weekly": "Weekly",
+      "yearly": "Yearly"
+    }
+  },
+  "receiptScanner": {
+    "title": "Receipt Scanner",
+    "subtitle": "Upload an image of your receipt or take a photo",
+    "uploadSection": {
+      "title": "Upload Receipt",
+      "description": "Upload an image of your receipt or take a photo",
+      "uploadButton": "Choose File",
+      "cameraButton": "Take Photo",
+      "dragDrop": "Drag and drop your receipt image here, or click to browse"
+    },
+    "processing": {
+      "title": "Processing Receipt",
+      "description": "AI is analyzing your receipt...",
+      "extracting": "Extracting text...",
+      "categorizing": "Categorizing expenses...",
+      "analyzing": "Analyzing data..."
+    },
+    "results": {
+      "title": "Receipt Analysis Results",
+      "merchant": "Merchant",
+      "date": "Date",
+      "total": "Total Amount",
+      "items": "Items",
+      "category": "Category",
+      "confidence": "Confidence",
+      "saveTransaction": "Save as Transaction",
+      "editDetails": "Edit Details"
+    },
+    "errors": {
+      "uploadFailed": "Failed to upload image",
+      "processingFailed": "Failed to process receipt",
+      "noTextFound": "No text found in image",
+      "tryAgain": "Please try again with a clearer image"
+    }
+  },
+  "analytics": {
+    "title": "Smart Analytics",
+    "subtitle": "AI-powered insights and recommendations",
+    "overview": "Overview",
+    "spendingTrends": "Spending Trends",
+    "categoryBreakdown": "Category Breakdown",
+    "aiInsights": "AI Insights",
+    "recommendations": "Recommendations",
+    "charts": {
+      "monthlySpending": "Monthly Spending",
+      "categoryDistribution": "Category Distribution",
+      "incomeVsExpenses": "Income vs Expenses",
+      "budgetProgress": "Budget Progress"
+    },
+    "insights": {
+      "title": "AI Insights",
+      "spendingPattern": "Spending Pattern Analysis",
+      "savingsOpportunity": "Savings Opportunities",
+      "budgetAlerts": "Budget Alerts",
+      "trends": "Trend Analysis"
+    }
+  },
+  "reports": {
+    "title": "Monthly Reports",
+    "subtitle": "Comprehensive financial analysis",
+    "monthlySummary": "Monthly Summary",
+    "financialOverview": "Financial Overview",
+    "budgetPerformance": "Budget Performance",
+    "spendingAnalysis": "Spending Analysis",
+    "aiInsights": "AI-Generated Insights",
+    "goalTracking": "Goal Tracking",
+    "exportReport": "Export Report",
+    "sections": {
+      "income": "Income",
+      "expenses": "Expenses",
+      "savings": "Savings",
+      "budgets": "Budgets",
+      "trends": "Trends",
+      "recommendations": "Recommendations"
+    }
   },
   "csvImport": {
     "title": "Import CSV",
