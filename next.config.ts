@@ -13,11 +13,6 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: process.cwd(),
   trailingSlash: false,
   skipTrailingSlashRedirect: true,
-  output: 'export',
-  trailingSlash: true,
-  images: {
-    unoptimized: true,
-  },
 };
 
 export default withNextIntl(nextConfig);

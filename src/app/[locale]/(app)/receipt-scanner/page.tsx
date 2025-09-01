@@ -29,6 +29,9 @@ import {
   Camera
 } from "lucide-react";
 
+// Force static generation to avoid prerendering issues
+export const dynamic = 'force-static';
+
 interface ReceiptData {
   merchant: string;
   total: number;

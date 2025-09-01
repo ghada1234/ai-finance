@@ -21,7 +21,7 @@ import {
   Calendar
 } from "lucide-react";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-static';
 
 interface Budget {
   id: string;
