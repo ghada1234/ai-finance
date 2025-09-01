@@ -37,5 +37,54 @@
     "amount": "Amount",
     "type": "Type",
     "category": "Category"
+  },
+  "home": {
+    "hero": {
+      "badge": "AI-Powered Financial Management",
+      "title": "Take Control of Your",
+      "titleHighlight": "Finances",
+      "subtitle": "Intelligent expense tracking, automated categorization, and AI-driven insights to help you make smarter financial decisions.",
+      "cta": "Start Free Trial"
+    },
+    "features": {
+      "title": "Why Choose AI Finance?",
+      "subtitle": "Powerful features designed to simplify your financial life",
+      "receiptScanner": {
+        "title": "AI Receipt Scanner",
+        "description": "Automatically extract and categorize expenses from photos of receipts"
+      },
+      "analytics": {
+        "title": "Smart Analytics",
+        "description": "Get AI-powered insights and recommendations for better financial decisions"
+      },
+      "budget": {
+        "title": "Budget Tracking",
+        "description": "Set budgets and get alerts when you're approaching limits"
+      },
+      "expense": {
+        "title": "Expense Management",
+        "description": "Track all your expenses with automatic categorization and tagging"
+      },
+      "reports": {
+        "title": "Monthly Reports",
+        "description": "Receive detailed monthly reports with AI-generated insights"
+      },
+      "security": {
+        "title": "Secure & Private",
+        "description": "Bank-level security with end-to-end encryption for your data"
+      }
+    },
+    "cta": {
+      "title": "Ready to Transform Your Finances?",
+      "subtitle": "Join thousands of users who are already saving time and money with AI Finance",
+      "button": "Start Free Trial"
+    },
+    "footer": {
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "support": "Support",
+      "contact": "Contact",
+      "copyright": "© 2024 AI Finance. All rights reserved."
+    }
   }
 }

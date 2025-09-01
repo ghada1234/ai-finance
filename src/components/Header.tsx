@@ -14,10 +14,13 @@ import { TrendingUp, Menu, X } from "lucide-react";
 import { useUser, SignInButton, SignOutButton } from '@clerk/nextjs';
 import { useState } from "react";
 import Link from "next/link";
+import { LanguageSwitcher } from "./LanguageSwitcher";
+import { useTranslations } from 'next-intl';
 
 export function Header() {
   const { user, isSignedIn, isLoaded } = useUser();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const t = useTranslations('navigation');
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -35,34 +38,35 @@ export function Header() {
           {isSignedIn && (
             <nav className="hidden md:flex items-center space-x-8">
               <Link href="/dashboard" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Dashboard
+                {t('dashboard')}
               </Link>
               <Link href="/transactions" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Transactions
+                {t('transactions')}
               </Link>
               <Link href="/accounts" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Accounts
+                {t('accounts')}
               </Link>
               <Link href="/budgets" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Budgets
+                {t('budgets')}
               </Link>
               <Link href="/receipt-scanner" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Receipt Scanner
+                {t('receiptScanner')}
               </Link>
               <Link href="/analytics" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Analytics
+                {t('analytics')}
               </Link>
               <Link href="/reports" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Reports
+                {t('reports')}
               </Link>
               <Link href="/csv-import" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Import CSV
+                {t('csvImport')}
               </Link>
             </nav>
           )}
 
           {/* User Menu / Auth */}
           <div className="flex items-center space-x-4">
+            <LanguageSwitcher />
             {isSignedIn ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -86,28 +90,28 @@ export function Header() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard">Dashboard</Link>
+                    <Link href="/dashboard">{t('dashboard')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/accounts">Accounts</Link>
+                    <Link href="/accounts">{t('accounts')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/transactions">Transactions</Link>
+                    <Link href="/transactions">{t('transactions')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/budgets">Budgets</Link>
+                    <Link href="/budgets">{t('budgets')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/receipt-scanner">Receipt Scanner</Link>
+                    <Link href="/receipt-scanner">{t('receiptScanner')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/analytics">Analytics</Link>
+                    <Link href="/analytics">{t('analytics')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/reports">Reports</Link>
+                    <Link href="/reports">{t('reports')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/csv-import">Import CSV</Link>
+                    <Link href="/csv-import">{t('csvImport')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
@@ -148,56 +152,56 @@ export function Header() {
                 className="text-gray-600 hover:text-gray-900 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Dashboard
+                {t('dashboard')}
               </Link>
               <Link 
                 href="/transactions" 
                 className="text-gray-600 hover:text-gray-900 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Transactions
+                {t('transactions')}
               </Link>
               <Link 
                 href="/accounts" 
                 className="text-gray-600 hover:text-gray-900 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Accounts
+                {t('accounts')}
               </Link>
               <Link 
                 href="/budgets" 
                 className="text-gray-600 hover:text-gray-900 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Budgets
+                {t('budgets')}
               </Link>
               <Link 
                 href="/receipt-scanner" 
                 className="text-gray-600 hover:text-gray-900 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Receipt Scanner
+                {t('receiptScanner')}
               </Link>
               <Link 
                 href="/analytics" 
                 className="text-gray-600 hover:text-gray-900 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Analytics
+                {t('analytics')}
               </Link>
               <Link 
                 href="/reports" 
                 className="text-gray-600 hover:text-gray-900 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Reports
+                {t('reports')}
               </Link>
               <Link 
                 href="/csv-import" 
                 className="text-gray-600 hover:text-gray-900 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Import CSV
+                {t('csvImport')}
               </Link>
             </nav>
           </div>
