@@ -40,7 +40,8 @@ interface ColumnMapping {
   notes: string;
 }
 
-export default function CSVImportPage() {
+
+  export default function CSVImportPage() {
   const { user, isSignedIn, isLoaded } = useUser();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [csvData, setCsvData] = useState<CSVData | null>(null);

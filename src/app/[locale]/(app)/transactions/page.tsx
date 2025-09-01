@@ -33,7 +33,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 
-export default function TransactionsPage() {
+
+  export default function TransactionsPage() {
   const { user, isSignedIn, isLoaded } = useUser();
   const [filters, setFilters] = useState({
     search: "",

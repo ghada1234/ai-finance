@@ -12,7 +12,6 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { 
   Upload, 
-  Camera, 
   FileText, 
   DollarSign, 
   Calendar, 
@@ -46,7 +45,8 @@ interface ReceiptData {
   address?: string;
 }
 
-export default function ReceiptScannerPage() {
+
+  export default function ReceiptScannerPage() {
   const { user, isSignedIn, isLoaded } = useUser();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -90,11 +90,6 @@ export default function ReceiptScannerPage() {
       setEditedData(null);
       setIsEditing(false);
     }
-  };
-
-  const handleCameraCapture = () => {
-    // This would integrate with device camera
-    alert("Camera capture functionality would be implemented here");
   };
 
   const processReceipt = async () => {
@@ -220,7 +215,7 @@ export default function ReceiptScannerPage() {
               Upload Receipt
             </CardTitle>
             <CardDescription>
-              Take a photo or upload an image of your receipt
+              Upload an image of your receipt
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -230,14 +225,10 @@ export default function ReceiptScannerPage() {
                 <p className="text-gray-600 mb-4">
                   Drag and drop your receipt image here, or click to browse
                 </p>
-                <div className="flex gap-2 justify-center">
+                <div className="flex justify-center">
                   <Button onClick={() => fileInputRef.current?.click()}>
                     <Upload className="h-4 w-4 mr-2" />
                     Upload Image
-                  </Button>
-                  <Button variant="outline" onClick={handleCameraCapture}>
-                    <Camera className="h-4 w-4 mr-2" />
-                    Take Photo
                   </Button>
                 </div>
                 <div className="mt-4 p-3 bg-blue-50 rounded-lg">

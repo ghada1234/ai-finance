@@ -23,7 +23,12 @@ interface DashboardStats {
   savingsRate: number;
 }
 
-export default function DashboardPage() {
+
+  export default function DashboardPage() {
+  // Prevent hydration issues during build
+  if (typeof window === 'undefined') {
+    return null;
+  }
   const { user, isSignedIn, isLoaded } = useUser();
   const [stats, setStats] = useState<DashboardStats>({
     totalBalance: 0,
