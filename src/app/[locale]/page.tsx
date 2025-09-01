@@ -68,9 +68,9 @@ export default function Home() {
             {/* Language Switcher */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                  <Globe className="h-4 w-4" />
-                  <span className="hidden sm:inline">Language</span>
+                <Button variant="ghost" size="sm" className="flex items-center gap-2 border border-gray-300">
+                  <Globe className="h-4 w-4 text-blue-600" />
+                  <span className="hidden sm:inline font-medium">Language / اللغة</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -111,13 +111,39 @@ export default function Home() {
             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
               {t('hero.subtitle', 'home')}
             </p>
-          <div className="flex justify-center">
-            <Link href="/dashboard">
-              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                {t('hero.cta', 'home')}
-              </Button>
-            </Link>
-          </div>
+            
+            {/* Prominent Language Switcher */}
+            <div className="mb-8">
+              <p className="text-sm text-gray-500 mb-3">Choose your language / اختر لغتك</p>
+              <div className="flex justify-center gap-3">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => switchLanguage('en')}
+                  className="flex items-center gap-2 px-6 py-3 border-2 hover:border-blue-600 hover:bg-blue-50"
+                >
+                  <span className="text-lg">🇺🇸</span>
+                  <span className="font-medium">English</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => switchLanguage('ar')}
+                  className="flex items-center gap-2 px-6 py-3 border-2 hover:border-blue-600 hover:bg-blue-50"
+                >
+                  <span className="text-lg">🇸🇦</span>
+                  <span className="font-medium">العربية</span>
+                </Button>
+              </div>
+            </div>
+            
+            <div className="flex justify-center">
+              <Link href="/dashboard">
+                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                  {t('hero.cta', 'home')}
+                </Button>
+              </Link>
+            </div>
         </div>
       </section>
 
