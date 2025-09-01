@@ -11,6 +11,16 @@
   package = "@netlify/plugin-nextjs"
 
 [[redirects]]
+  from = "/ar/*"
+  to = "/ar/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/en/*"
+  to = "/en/:splat"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
