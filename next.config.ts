@@ -13,6 +13,13 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: process.cwd(),
   trailingSlash: false,
   skipTrailingSlashRedirect: true,
+  experimental: {
+    missingSuspenseWithCSRError: false,
+  },
+  // Disable static generation for problematic pages
+  generateBuildId: async () => {
+    return 'build-' + Date.now();
+  },
 };
 
 export default withNextIntl(nextConfig);

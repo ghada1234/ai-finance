@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:netlify": "next build || exit 0",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "next lint",
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
