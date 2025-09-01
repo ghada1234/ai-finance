@@ -25,7 +25,8 @@ import {
   Sparkles,
   Receipt,
   MapPin,
-  Hash
+  Hash,
+  Camera
 } from "lucide-react";
 
 interface ReceiptData {
@@ -56,7 +57,11 @@ interface ReceiptData {
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState<ReceiptData | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
+  const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   if (!isLoaded) {
     return (
@@ -188,8 +193,72 @@ interface ReceiptData {
     setExtractedData(null);
     setEditedData(null);
     setIsEditing(false);
+    setShowCamera(false);
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      setCameraStream(null);
+    }
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
+    }
+  };
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { 
+          facingMode: 'environment', // Use back camera on mobile
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        } 
+      });
+      setCameraStream(stream);
+      setShowCamera(true);
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+      alert('Unable to access camera. Please check permissions and try again.');
+    }
+  };
+
+  const stopCamera = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      setCameraStream(null);
+    }
+    setShowCamera(false);
+  };
+
+  const capturePhoto = () => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      const context = canvas.getContext('2d');
+      
+      if (context) {
+        // Set canvas size to match video
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
+        // Draw the current video frame to canvas
+        context.drawImage(video, 0, 0);
+        
+        // Convert canvas to blob
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const file = new File([blob], 'receipt-photo.jpg', { type: 'image/jpeg' });
+            setSelectedFile(file);
+            const url = URL.createObjectURL(blob);
+            setPreviewUrl(url);
+            setExtractedData(null);
+            setEditedData(null);
+            setIsEditing(false);
+            stopCamera();
+          }
+        }, 'image/jpeg', 0.9);
+      }
     }
   };
 
@@ -219,16 +288,20 @@ interface ReceiptData {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {!previewUrl ? (
+            {!previewUrl && !showCamera ? (
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors">
                 <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600 mb-4">
-                  Drag and drop your receipt image here, or click to browse
+                  Drag and drop your receipt image here, or choose an option below
                 </p>
-                <div className="flex justify-center">
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Button onClick={() => fileInputRef.current?.click()}>
                     <Upload className="h-4 w-4 mr-2" />
                     Upload Image
+                  </Button>
+                  <Button variant="outline" onClick={startCamera}>
+                    <Camera className="h-4 w-4 mr-2" />
+                    Take Photo
                   </Button>
                 </div>
                 <div className="mt-4 p-3 bg-blue-50 rounded-lg">
@@ -251,11 +324,50 @@ interface ReceiptData {
                   className="hidden"
                 />
               </div>
+            ) : showCamera ? (
+              <div className="space-y-4">
+                <div className="relative">
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    playsInline
+                    className="w-full h-64 object-cover border rounded-lg"
+                    onLoadedMetadata={() => {
+                      if (videoRef.current) {
+                        videoRef.current.play();
+                      }
+                    }}
+                  />
+                  <canvas ref={canvasRef} className="hidden" />
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="absolute top-2 right-2"
+                    onClick={stopCamera}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="flex gap-2">
+                  <Button onClick={capturePhoto} className="flex-1">
+                    <Camera className="h-4 w-4 mr-2" />
+                    Capture Photo
+                  </Button>
+                  <Button variant="outline" onClick={stopCamera} className="flex-1">
+                    Cancel
+                  </Button>
+                </div>
+                <div className="p-3 bg-blue-50 rounded-lg">
+                  <p className="text-sm text-blue-800">
+                    <strong>📸 Camera Tips:</strong> Position your receipt flat on a surface with good lighting. Make sure all text is clearly visible and avoid shadows.
+                  </p>
+                </div>
+              </div>
             ) : (
               <div className="space-y-4">
                 <div className="relative">
                   <img
-                    src={previewUrl}
+                    src={previewUrl || ''}
                     alt="Receipt preview"
                     className="w-full h-64 object-contain border rounded-lg"
                   />

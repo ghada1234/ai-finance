@@ -4,3 +4,8 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   return (
+    <div>
+      {children}
+    </div>
+  );
+}

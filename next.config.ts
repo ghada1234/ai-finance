@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   outputFileTracingRoot: process.cwd(),
+  trailingSlash: false,
+  skipTrailingSlashRedirect: true,
 };
 
 export default withNextIntl(nextConfig);
