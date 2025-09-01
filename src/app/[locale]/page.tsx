@@ -17,7 +17,7 @@ import {
   Globe
 } from "lucide-react";
 import Link from "next/link";
-import { useTranslations } from 'next-intl';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useRouter, usePathname } from 'next/navigation';
 import {
   DropdownMenu,
@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export default function Home() {
-  const t = useTranslations('home');
+  const { t } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -37,9 +37,20 @@ export default function Home() {
   ];
 
   const switchLanguage = (locale: string) => {
-    const pathWithoutLocale = pathname.replace(/^\/(en|ar)/, "");
-    const newPath = `/${locale}${pathWithoutLocale || ""}`;
-    router.push(newPath);
+    // Save to localStorage
+    localStorage.setItem('locale', locale);
+    
+    // Apply RTL if Arabic
+    if (locale === 'ar') {
+      document.documentElement.dir = 'rtl';
+      document.documentElement.lang = 'ar';
+    } else {
+      document.documentElement.dir = 'ltr';
+      document.documentElement.lang = 'en';
+    }
+    
+    // Reload the page to apply the new language
+    window.location.reload();
   };
 
   return (
@@ -89,21 +100,21 @@ export default function Home() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center max-w-4xl mx-auto">
-          <Badge variant="secondary" className="mb-4">
-            <Zap className="w-4 h-4 mr-2" />
-            {t('hero.badge')}
-          </Badge>
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            {t('hero.title')}
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> {t('hero.titleHighlight')}</span>
-          </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            {t('hero.subtitle')}
-          </p>
+                      <Badge variant="secondary" className="mb-4">
+              <Zap className="w-4 h-4 mr-2" />
+              {t('hero.badge', 'home')}
+            </Badge>
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+              {t('hero.title', 'home')}
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> {t('hero.titleHighlight', 'home')}</span>
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+              {t('hero.subtitle', 'home')}
+            </p>
           <div className="flex justify-center">
             <Link href="/dashboard">
               <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                {t('hero.cta')}
+                {t('hero.cta', 'home')}
               </Button>
             </Link>
           </div>
@@ -114,10 +125,10 @@ export default function Home() {
       <section className="container mx-auto px-4 py-20">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            {t('features.title')}
+            {t('features.title', 'home')}
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            {t('features.subtitle')}
+            {t('features.subtitle', 'home')}
           </p>
         </div>
 
@@ -127,9 +138,9 @@ export default function Home() {
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
                 <Brain className="w-6 h-6 text-blue-600" />
               </div>
-              <CardTitle>{t('features.receiptScanner.title')}</CardTitle>
+              <CardTitle>{t('features.receiptScanner.title', 'home')}</CardTitle>
               <CardDescription>
-                {t('features.receiptScanner.description')}
+                {t('features.receiptScanner.description', 'home')}
               </CardDescription>
             </CardHeader>
           </Card>
@@ -139,9 +150,9 @@ export default function Home() {
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
                 <BarChart3 className="w-6 h-6 text-green-600" />
               </div>
-              <CardTitle>{t('features.analytics.title')}</CardTitle>
+              <CardTitle>{t('features.analytics.title', 'home')}</CardTitle>
               <CardDescription>
-                {t('features.analytics.description')}
+                {t('features.analytics.description', 'home')}
               </CardDescription>
             </CardHeader>
           </Card>
@@ -151,9 +162,9 @@ export default function Home() {
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
                 <Target className="w-6 h-6 text-purple-600" />
               </div>
-              <CardTitle>{t('features.budget.title')}</CardTitle>
+              <CardTitle>{t('features.budget.title', 'home')}</CardTitle>
               <CardDescription>
-                {t('features.budget.description')}
+                {t('features.budget.description', 'home')}
               </CardDescription>
             </CardHeader>
           </Card>
@@ -163,9 +174,9 @@ export default function Home() {
               <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
                 <Receipt className="w-6 h-6 text-orange-600" />
               </div>
-              <CardTitle>{t('features.expense.title')}</CardTitle>
+              <CardTitle>{t('features.expense.title', 'home')}</CardTitle>
               <CardDescription>
-                {t('features.expense.description')}
+                {t('features.expense.description', 'home')}
               </CardDescription>
             </CardHeader>
           </Card>
@@ -175,9 +186,9 @@ export default function Home() {
               <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
                 <Mail className="w-6 h-6 text-red-600" />
               </div>
-              <CardTitle>{t('features.reports.title')}</CardTitle>
+              <CardTitle>{t('features.reports.title', 'home')}</CardTitle>
               <CardDescription>
-                {t('features.reports.description')}
+                {t('features.reports.description', 'home')}
               </CardDescription>
             </CardHeader>
           </Card>
@@ -187,9 +198,9 @@ export default function Home() {
               <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
                 <Shield className="w-6 h-6 text-indigo-600" />
               </div>
-              <CardTitle>{t('features.security.title')}</CardTitle>
+              <CardTitle>{t('features.security.title', 'home')}</CardTitle>
               <CardDescription>
-                {t('features.security.description')}
+                {t('features.security.description', 'home')}
               </CardDescription>
             </CardHeader>
           </Card>
@@ -201,15 +212,15 @@ export default function Home() {
         <Card className="bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0">
           <CardContent className="text-center py-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {t('cta.title')}
+              {t('cta.title', 'home')}
             </h2>
             <p className="text-xl mb-8 opacity-90">
-              {t('cta.subtitle')}
+              {t('cta.subtitle', 'home')}
             </p>
             <div className="flex justify-center">
               <Link href="/dashboard">
                 <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-gray-100">
-                  {t('cta.button')}
+                  {t('cta.button', 'home')}
                 </Button>
               </Link>
             </div>
