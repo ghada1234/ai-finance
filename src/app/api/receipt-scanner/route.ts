@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { createWorker } from "tesseract.js";
+import sharp from "sharp";
 
 interface ReceiptData {
   merchant: string;
@@ -52,31 +54,37 @@ async function processReceiptWithAI(imageBase64: string): Promise<ReceiptData> {
   }
 }
 
-// Real OCR text extraction using a free API
+// Real OCR text extraction using Tesseract.js
 async function extractTextFromImage(imageBase64: string): Promise<string> {
   try {
-    // Using OCR.space API (free tier available)
-    const formData = new FormData();
-    formData.append('apikey', process.env.OCR_API_KEY || 'K81634588988957');
-    formData.append('language', 'eng');
-    formData.append('isOverlayRequired', 'false');
-    formData.append('filetype', 'base64');
-    formData.append('base64Image', `data:image/jpeg;base64,${imageBase64}`);
+    console.log('Starting Tesseract.js OCR processing...');
     
-    const response = await fetch('https://api.ocr.space/parse/image', {
-      method: 'POST',
-      body: formData
+    // Convert base64 to buffer
+    const imageBuffer = Buffer.from(imageBase64, 'base64');
+    
+    // Preprocess image for better OCR
+    const preprocessedBuffer = await sharp(imageBuffer)
+      .resize({ width: 1800, withoutEnlargement: true })
+      .grayscale()
+      .normalize()
+      .toBuffer();
+    
+    console.log('Image preprocessed, starting OCR...');
+    
+    // Initialize Tesseract worker
+    const worker = await createWorker();
+    await worker.loadLanguage("eng");
+    await worker.initialize("eng", 1); // 1 = LSTM for better accuracy
+    
+    // Recognize text with optimized settings for receipts
+    const { data } = await worker.recognize(preprocessedBuffer, { 
+      tessedit_pageseg_mode: 3 // Treat as blocks of text
     });
     
-    const result = await response.json();
+    await worker.terminate();
     
-    if (result.IsErroredOnProcessing) {
-      console.error('OCR API error:', result.ErrorMessage);
-      throw new Error('OCR processing failed');
-    }
-    
-    const extractedText = result.ParsedResults?.[0]?.ParsedText || '';
-    console.log('OCR extracted text:', extractedText);
+    const extractedText = data.text;
+    console.log('Tesseract.js extracted text:', extractedText);
     
     if (!extractedText.trim()) {
       throw new Error('No text extracted from image');
@@ -84,8 +92,8 @@ async function extractTextFromImage(imageBase64: string): Promise<string> {
     
     return extractedText;
   } catch (error) {
-    console.error('OCR error:', error);
-    throw error; // Don't return mock data, let the error propagate
+    console.error('Tesseract.js OCR error:', error);
+    throw error;
   }
 }
 
@@ -128,10 +136,13 @@ async function analyzeReceiptText(text: string): Promise<any> {
   return parseReceiptTextManually(text);
 }
 
-// Manual text parsing as fallback
+// Enhanced text parsing optimized for Tesseract.js output
 function parseReceiptTextManually(text: string): any {
   console.log('Parsing text manually:', text);
-  const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+  
+  // Clean up text (remove extra spaces, normalize line breaks)
+  const cleaned = text.replace(/\s{2,}/g, " ").trim();
+  const lines = cleaned.split(/\n|\\n/).map(line => line.trim()).filter(line => line);
   
   let merchant = '';
   let total = 0;
@@ -142,95 +153,73 @@ function parseReceiptTextManually(text: string): any {
   let receiptNumber = '';
   let address = '';
   
-  // Extract merchant (usually first line, but skip common header words)
-  const skipWords = ['RECEIPT', 'THANK', 'WELCOME', 'PURCHASE', 'SALE'];
-  for (let i = 0; i < Math.min(5, lines.length); i++) {
-    const line = lines[i].toUpperCase();
-    if (!skipWords.some(word => line.includes(word)) && line.length > 2) {
-      merchant = lines[i];
-      break;
-    }
-  }
+  // Extract merchant: first non-empty line with letters/numbers
+  merchant = lines.find(l => /[A-Za-z].{2,}/.test(l)) || '';
   
-  // Extract total (look for TOTAL, AMOUNT, BALANCE, etc.)
-  const totalPatterns = [
-    /TOTAL.*?(\d+\.\d{2})/i,
-    /AMOUNT.*?(\d+\.\d{2})/i,
-    /BALANCE.*?(\d+\.\d{2})/i,
-    /(\d+\.\d{2})\s*TOTAL/i,
-    /(\d+\.\d{2})\s*AMOUNT/i
-  ];
+  // Extract total: look for patterns like "Total $12.34", "Amount: 12.34", etc.
+  const totalMatch =
+    cleaned.match(/(?:grand\s*)?total[:\s]*([$€£]?\s?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)/i) ||
+    cleaned.match(/amount\s*due[:\s]*([$€£]?\s?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)/i) ||
+    cleaned.match(/balance[:\s]*([$€£]?\s?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)/i) ||
+    cleaned.match(/(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)\s*total/i);
   
-  for (const pattern of totalPatterns) {
-    const match = text.match(pattern);
-    if (match) {
-      total = parseFloat(match[1]);
-      break;
-    }
+  if (totalMatch) {
+    total = parseFloat(totalMatch[1].replace(/[$,€£\s]/g, ''));
   }
   
   // If no total found, look for the largest number that could be a total
   if (total === 0) {
-    const allNumbers = text.match(/\d+\.\d{2}/g);
+    const allNumbers = cleaned.match(/\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?/g);
     if (allNumbers) {
-      const numbers = allNumbers.map(n => parseFloat(n)).sort((a, b) => b - a);
+      const numbers = allNumbers.map(n => parseFloat(n.replace(/[$,€£\s]/g, ''))).sort((a, b) => b - a);
       total = numbers[0]; // Assume the largest number is the total
     }
   }
   
-  // Extract items (lines with prices, but not totals or taxes)
+  // Extract items: lines with prices but not totals/taxes
   const itemLines = lines.filter(line => {
-    const hasPrice = /\d+\.\d{2}/.test(line);
-    const isTotal = /TOTAL|AMOUNT|BALANCE|TAX|SUBTOTAL/i.test(line);
-    const isHeader = /RECEIPT|THANK|WELCOME|PURCHASE|SALE|DATE|TIME/i.test(line);
+    const hasPrice = /\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?/.test(line);
+    const isTotal = /total|amount|balance|tax|subtotal|grand/i.test(line);
+    const isHeader = /receipt|thank|welcome|purchase|sale|date|time|store|address/i.test(line);
     return hasPrice && !isTotal && !isHeader;
   });
   
   itemLines.forEach(line => {
-    const priceMatch = line.match(/(\d+\.\d{2})/);
+    const priceMatch = line.match(/(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)/);
     if (priceMatch) {
-      const price = parseFloat(priceMatch[1]);
+      const price = parseFloat(priceMatch[1].replace(/[$,€£\s]/g, ''));
       const name = line.replace(priceMatch[0], '').trim();
-      if (name && price > 0 && price < total) { // Price should be less than total
+      if (name && price > 0 && price < total * 1.5) { // Price should be reasonable
         items.push({ name, price, quantity: 1 });
       }
     }
   });
   
-  // Extract date (multiple formats)
-  const datePatterns = [
-    /(\d{1,2}\/\d{1,2}\/\d{2,4})/,
-    /(\d{4}-\d{2}-\d{2})/,
-    /(\d{1,2}-\d{1,2}-\d{2,4})/,
-    /DATE.*?(\d{1,2}\/\d{1,2}\/\d{2,4})/i
-  ];
+  // Extract date: common formats
+  const dateMatch = cleaned.match(
+    /\b(\d{4}[-/]\d{1,2}[-/]\d{1,2}|\d{1,2}[-/]\d{1,2}[-/]\d{2,4})\b/
+  );
+  if (dateMatch) {
+    date = dateMatch[1];
+  }
   
-  for (const pattern of datePatterns) {
-    const match = text.match(pattern);
-    if (match) {
-      date = match[1];
-      break;
-    }
+  // Extract VAT/Tax
+  const taxMatch = cleaned.match(/(?:tax|vat)[:\s]*([$€£]?\s?\d+(?:[.,]\d{2})?)/i);
+  if (taxMatch) {
+    tax = parseFloat(taxMatch[1].replace(/[$,€£\s]/g, ''));
   }
   
   // Extract receipt number
-  const receiptPatterns = [
-    /RECEIPT.*?(\d+)/i,
-    /#.*?(\d+)/i,
-    /TRANS.*?(\d+)/i
-  ];
-  
-  for (const pattern of receiptPatterns) {
-    const match = text.match(pattern);
-    if (match) {
-      receiptNumber = match[1];
-      break;
-    }
+  const receiptMatch = cleaned.match(/(?:receipt|trans|#)[:\s]*(\d+)/i);
+  if (receiptMatch) {
+    receiptNumber = receiptMatch[1];
   }
   
-  // Calculate subtotal and tax
+  // Calculate subtotal and tax if not found
   subtotal = items.reduce((sum, item) => sum + item.price, 0);
-  tax = Math.max(0, total - subtotal);
+  if (tax === 0) {
+    tax = Math.max(0, total - subtotal);
+  }
   
   console.log('Parsed data:', { merchant, total, date, items, tax, subtotal, receiptNumber });
   

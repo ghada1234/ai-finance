@@ -110,19 +110,20 @@ export default function ReceiptScannerPage() {
         const base64 = e.target?.result as string;
         const imageBase64 = base64.split(',')[1]; // Remove data:image/jpeg;base64, prefix
 
-        // Real processing steps with actual AI integration
+        // Real processing steps with Tesseract.js OCR
         const steps = [
-          "Uploading image to AI service...",
-          "Extracting text using OCR...",
+          "Preprocessing image for OCR...",
+          "Loading Tesseract.js engine...",
+          "Extracting text from receipt...",
           "Analyzing receipt structure...",
           "Identifying merchant and items...",
           "Calculating totals and tax...",
           "Categorizing transaction...",
-          "Finalizing AI analysis..."
+          "Finalizing analysis..."
         ];
 
         for (let i = 0; i < steps.length; i++) {
-          await new Promise(resolve => setTimeout(resolve, 800));
+          await new Promise(resolve => setTimeout(resolve, 600));
           setProcessingProgress(((i + 1) / steps.length) * 100);
         }
 
@@ -241,13 +242,14 @@ export default function ReceiptScannerPage() {
                 </div>
                 <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                   <p className="text-sm text-blue-800 mb-2">
-                    <strong>💡 Tip:</strong> For best results, ensure your receipt is:
+                    <strong>💡 Tip:</strong> For best OCR results, ensure your receipt is:
                   </p>
                   <ul className="text-xs text-blue-700 space-y-1">
                     <li>• Well-lit and clearly visible</li>
                     <li>• Flat and not crumpled</li>
-                    <li>• Contains clear text and numbers</li>
-                    <li>• Shows merchant name, total, and items</li>
+                    <li>• High contrast (dark text on light background)</li>
+                    <li>• Shows merchant name, total, and items clearly</li>
+                    <li>• Avoid shadows or glare on the text</li>
                   </ul>
                 </div>
                 <input
