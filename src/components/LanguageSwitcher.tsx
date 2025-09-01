@@ -57,9 +57,9 @@ export function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="flex items-center gap-2">
-          <Globe className="h-4 w-4" />
-          <span className="hidden sm:inline">
+        <Button variant="ghost" size="sm" className="flex items-center gap-2 border border-gray-300">
+          <Globe className="h-4 w-4 text-blue-600" />
+          <span className="hidden sm:inline font-medium">
             {currentLocale === 'ar' ? 'العربية' : 'Language'}
           </span>
         </Button>

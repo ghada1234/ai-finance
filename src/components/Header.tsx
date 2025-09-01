@@ -66,7 +66,9 @@ export function Header() {
 
           {/* User Menu / Auth */}
           <div className="flex items-center space-x-4">
+            {/* Language Switcher - Always Visible */}
             <LanguageSwitcher />
+            
             {isSignedIn ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
