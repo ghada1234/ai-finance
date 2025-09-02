@@ -23,33 +23,45 @@ interface ReceiptData {
 // Enhanced AI processing function with real OCR and analysis
 async function processReceiptWithAI(imageBase64: string): Promise<ReceiptData> {
   try {
-    // Step 1: OCR Text Extraction (using a free OCR service)
+    console.log('Starting OCR processing...');
+    
+    // Step 1: OCR Text Extraction
     const ocrText = await extractTextFromImage(imageBase64);
+    console.log('OCR text extracted:', ocrText.substring(0, 200) + '...');
     
-    // Step 2: AI Analysis of extracted text
-    const analysis = await analyzeReceiptText(ocrText);
+    // Step 2: Simple text parsing (fallback if AI analysis fails)
+    const parsedData = parseReceiptTextManually(ocrText);
+    console.log('Parsed data:', parsedData);
     
-    // Step 3: Merchant recognition and categorization
-    const merchantInfo = await identifyMerchant(analysis.merchant);
+    // Step 3: Try AI analysis if available
+    let aiAnalysis = null;
+    try {
+      aiAnalysis = await analyzeReceiptText(ocrText);
+      console.log('AI analysis result:', aiAnalysis);
+    } catch (aiError) {
+      console.log('AI analysis failed, using manual parsing:', aiError);
+    }
     
-    // Step 4: Calculate confidence based on data quality
-    const confidence = calculateConfidence(analysis, merchantInfo);
-    
-    return {
-      merchant: analysis.merchant || merchantInfo.name,
-      total: analysis.total,
-      date: analysis.date,
-      items: analysis.items,
-      category: merchantInfo.category,
-      confidence: confidence,
-      tax: analysis.tax,
-      subtotal: analysis.subtotal,
-      receiptNumber: analysis.receiptNumber,
-      address: analysis.address
+    // Step 4: Combine AI and manual parsing results
+    const finalData = {
+      merchant: aiAnalysis?.merchant || parsedData.merchant || 'Unknown Store',
+      total: aiAnalysis?.total || parsedData.total || 0,
+      date: aiAnalysis?.date || parsedData.date || new Date().toISOString().split('T')[0],
+      items: aiAnalysis?.items || parsedData.items || [],
+      category: aiAnalysis?.category || parsedData.category || 'Other',
+      confidence: aiAnalysis?.confidence || parsedData.confidence || 50,
+      tax: aiAnalysis?.tax || parsedData.tax || 0,
+      subtotal: aiAnalysis?.subtotal || parsedData.subtotal || 0,
+      receiptNumber: aiAnalysis?.receiptNumber || parsedData.receiptNumber || '',
+      address: aiAnalysis?.address || parsedData.address || ''
     };
+    
+    console.log('Final processed data:', finalData);
+    return finalData;
+    
   } catch (error) {
     console.error('AI processing error:', error);
-    // Fallback to mock data if AI processing fails
+    console.log('Returning fallback data due to processing error');
     return generateFallbackData();
   }
 }

@@ -49,7 +49,7 @@ interface ReceiptData {
 }
 
 
-  export default function ReceiptScannerPage() {
+export default function ReceiptScannerPage() {
   const { user, isSignedIn, isLoaded } = useUser();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -302,6 +302,35 @@ interface ReceiptData {
         <p className="text-gray-600">
           Upload a photo of your receipt and let AI automatically extract and categorize your expenses
         </p>
+        
+        {/* Test API Button */}
+        <div className="mt-4">
+          <Button 
+            variant="outline" 
+            onClick={async () => {
+              try {
+                console.log('Testing API connection...');
+                const response = await fetch('/api/receipt-scanner', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ imageBase64: 'test' })
+                });
+                console.log('API test response:', response.status, response.statusText);
+                if (response.ok) {
+                  alert('API is working!');
+                } else {
+                  const errorText = await response.text();
+                  alert(`API error: ${response.status} - ${errorText}`);
+                }
+              } catch (error) {
+                console.error('API test failed:', error);
+                alert(`API test failed: ${error.message}`);
+              }
+            }}
+          >
+            Test API Connection
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
