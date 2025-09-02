@@ -37,28 +37,28 @@ export function Header() {
           {/* Desktop Navigation */}
           {isSignedIn && (
             <nav className="hidden md:flex items-center space-x-8">
-              <Link href="/dashboard" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link href="/en/dashboard" className="text-gray-600 hover:text-gray-900 transition-colors">
                 {t('dashboard', 'navigation')}
               </Link>
-              <Link href="/transactions" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link href="/en/transactions" className="text-gray-600 hover:text-gray-900 transition-colors">
                 {t('transactions', 'navigation')}
               </Link>
-              <Link href="/accounts" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link href="/en/accounts" className="text-gray-600 hover:text-gray-900 transition-colors">
                 {t('accounts', 'navigation')}
               </Link>
-              <Link href="/budgets" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link href="/en/budgets" className="text-gray-600 hover:text-gray-900 transition-colors">
                 {t('budgets', 'navigation')}
               </Link>
-              <Link href="/receipt-scanner" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link href="/en/receipt-scanner" className="text-gray-600 hover:text-gray-900 transition-colors">
                 {t('receiptScanner', 'navigation')}
               </Link>
-              <Link href="/analytics" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link href="/en/analytics" className="text-gray-600 hover:text-gray-900 transition-colors">
                 {t('analytics', 'navigation')}
               </Link>
-              <Link href="/reports" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link href="/en/reports" className="text-gray-600 hover:text-gray-900 transition-colors">
                 {t('reports', 'navigation')}
               </Link>
-              <Link href="/csv-import" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link href="/en/csv-import" className="text-gray-600 hover:text-gray-900 transition-colors">
                 {t('csvImport', 'navigation')}
               </Link>
             </nav>
@@ -92,28 +92,28 @@ export function Header() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard">{t('dashboard', 'navigation')}</Link>
+                    <Link href="/en/dashboard">{t('dashboard', 'navigation')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/accounts">{t('accounts', 'navigation')}</Link>
+                    <Link href="/en/accounts">{t('accounts', 'navigation')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/transactions">{t('transactions', 'navigation')}</Link>
+                    <Link href="/en/transactions">{t('transactions', 'navigation')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/budgets">{t('budgets', 'navigation')}</Link>
+                    <Link href="/en/budgets">{t('budgets', 'navigation')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/receipt-scanner">{t('receiptScanner', 'navigation')}</Link>
+                    <Link href="/en/receipt-scanner">{t('receiptScanner', 'navigation')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/analytics">{t('analytics', 'navigation')}</Link>
+                    <Link href="/en/analytics">{t('analytics', 'navigation')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/reports">{t('reports', 'navigation')}</Link>
+                    <Link href="/en/reports">{t('reports', 'navigation')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/csv-import">{t('csvImport', 'navigation')}</Link>
+                    <Link href="/en/csv-import">{t('csvImport', 'navigation')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>

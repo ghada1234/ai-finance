@@ -87,10 +87,10 @@ export default function Home() {
               </DropdownMenuContent>
             </DropdownMenu>
             
-            <Link href="/dashboard">
+            <Link href="/en/dashboard">
               <Button variant="ghost">Login</Button>
             </Link>
-            <Link href="/dashboard">
+            <Link href="/en/dashboard">
               <Button>Get Started</Button>
             </Link>
           </div>
@@ -138,10 +138,9 @@ export default function Home() {
             </div>
             
             <div className="flex justify-center">
-              <Link href="/dashboard">
-                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                  {t('hero.cta', 'home')}
-                </Button>
+                          <Link href="/en/dashboard">
+              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                {t('hero.cta', 'home')}
               </Link>
             </div>
         </div>
@@ -244,11 +243,11 @@ export default function Home() {
               {t('cta.subtitle', 'home')}
             </p>
             <div className="flex justify-center">
-              <Link href="/dashboard">
-                <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-gray-100">
-                  {t('cta.button', 'home')}
-                </Button>
-              </Link>
+                          <Link href="/en/dashboard">
+              <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-gray-100">
+                {t('cta.button', 'home')}
+              </Button>
+            </Link>
             </div>
           </CardContent>
         </Card>

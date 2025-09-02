@@ -11,7 +11,23 @@
     "create": "إنشاء",
     "import": "استيراد",
     "export": "تصدير",
-    "language": "اللغة"
+    "language": "اللغة",
+    "search": "بحث",
+    "filter": "تصفية",
+    "all": "الكل",
+    "income": "دخل",
+    "expense": "مصروف",
+    "amount": "المبلغ",
+    "date": "التاريخ",
+    "description": "الوصف",
+    "category": "الفئة",
+    "type": "النوع",
+    "status": "الحالة",
+    "actions": "الإجراءات",
+    "total": "المجموع",
+    "remaining": "المتبقي",
+    "spent": "المصروف",
+    "balance": "الرصيد"
   },
   "navigation": {
     "dashboard": "لوحة التحكم",
@@ -22,6 +38,183 @@
     "csvImport": "استيراد CSV",
     "analytics": "التحليلات",
     "reports": "التقارير"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "welcome": "مرحباً بعودتك!",
+    "summary": "الملخص المالي",
+    "totalBalance": "إجمالي الرصيد",
+    "totalIncome": "إجمالي الدخل",
+    "totalExpenses": "إجمالي المصروفات",
+    "recentTransactions": "المعاملات الأخيرة",
+    "budgetOverview": "نظرة عامة على الميزانية",
+    "addTransaction": "إضافة معاملة",
+    "editTransaction": "تعديل المعاملة",
+    "transactionForm": {
+      "title": "تفاصيل المعاملة",
+      "description": "الوصف",
+      "amount": "المبلغ",
+      "type": "النوع",
+      "category": "الفئة",
+      "date": "التاريخ",
+      "notes": "ملاحظات"
+    },
+    "categories": {
+      "food": "طعام ومطاعم",
+      "transport": "مواصلات",
+      "shopping": "تسوق",
+      "entertainment": "ترفيه",
+      "health": "رعاية صحية",
+      "education": "تعليم",
+      "utilities": "مرافق",
+      "other": "أخرى"
+    }
+  },
+  "accounts": {
+    "title": "الحسابات",
+    "manageAccounts": "إدارة حساباتك",
+    "totalBalance": "إجمالي الرصيد",
+    "addAccount": "إضافة حساب",
+    "editAccount": "تعديل الحساب",
+    "accountForm": {
+      "title": "تفاصيل الحساب",
+      "name": "اسم الحساب",
+      "type": "نوع الحساب",
+      "balance": "الرصيد الأولي",
+      "currency": "العملة",
+      "notes": "ملاحظات"
+    },
+    "types": {
+      "checking": "حساب جاري",
+      "savings": "حساب توفير",
+      "credit": "بطاقة ائتمان",
+      "investment": "حساب استثمار",
+      "cash": "نقدي",
+      "other": "أخرى"
+    }
+  },
+  "transactions": {
+    "title": "المعاملات",
+    "manageTransactions": "إدارة معاملاتك",
+    "totalBalance": "إجمالي الرصيد",
+    "totalIncome": "إجمالي الدخل",
+    "totalExpenses": "إجمالي المصروفات",
+    "addTransaction": "إضافة معاملة",
+    "editTransaction": "تعديل المعاملة",
+    "exportTransactions": "تصدير المعاملات",
+    "filters": {
+      "search": "البحث في المعاملات...",
+      "type": "تصفية حسب النوع",
+      "category": "تصفية حسب الفئة"
+    },
+    "transactionForm": {
+      "title": "تفاصيل المعاملة",
+      "description": "الوصف",
+      "amount": "المبلغ",
+      "type": "النوع",
+      "category": "الفئة",
+      "date": "التاريخ",
+      "account": "الحساب",
+      "notes": "ملاحظات"
+    }
+  },
+  "budgets": {
+    "title": "الميزانيات",
+    "manageBudgets": "إدارة ميزانياتك",
+    "totalBudget": "إجمالي الميزانية",
+    "totalSpent": "إجمالي المصروف",
+    "totalRemaining": "إجمالي المتبقي",
+    "addBudget": "إضافة ميزانية",
+    "editBudget": "تعديل الميزانية",
+    "budgetForm": {
+      "title": "تفاصيل الميزانية",
+      "name": "اسم الميزانية",
+      "amount": "مبلغ الميزانية",
+      "category": "الفئة",
+      "period": "الفترة",
+      "notes": "ملاحظات"
+    },
+    "periods": {
+      "monthly": "شهري",
+      "weekly": "أسبوعي",
+      "yearly": "سنوي"
+    }
+  },
+  "receiptScanner": {
+    "title": "ماسح الإيصالات",
+    "subtitle": "ارفع صورة لإيصالك أو التقط صورة",
+    "uploadSection": {
+      "title": "رفع الإيصال",
+      "description": "ارفع صورة لإيصالك أو التقط صورة",
+      "uploadButton": "اختر ملف",
+      "cameraButton": "التقط صورة",
+      "dragDrop": "اسحب وأفلت صورة الإيصال هنا، أو انقر للتصفح"
+    },
+    "processing": {
+      "title": "معالجة الإيصال",
+      "description": "الذكاء الاصطناعي يحلل إيصالك...",
+      "extracting": "استخراج النص...",
+      "categorizing": "تصنيف المصروفات...",
+      "analyzing": "تحليل البيانات..."
+    },
+    "results": {
+      "title": "نتائج تحليل الإيصال",
+      "merchant": "التاجر",
+      "date": "التاريخ",
+      "total": "المبلغ الإجمالي",
+      "items": "العناصر",
+      "category": "الفئة",
+      "confidence": "مستوى الثقة",
+      "saveTransaction": "حفظ كمعاملة",
+      "editDetails": "تعديل التفاصيل"
+    },
+    "errors": {
+      "uploadFailed": "فشل في رفع الصورة",
+      "processingFailed": "فشل في معالجة الإيصال",
+      "noTextFound": "لم يتم العثور على نص في الصورة",
+      "tryAgain": "يرجى المحاولة مرة أخرى بصورة أوضح"
+    }
+  },
+  "analytics": {
+    "title": "التحليلات الذكية",
+    "subtitle": "رؤى وتوصيات مدعومة بالذكاء الاصطناعي",
+    "overview": "نظرة عامة",
+    "spendingTrends": "اتجاهات الإنفاق",
+    "categoryBreakdown": "تقسيم الفئات",
+    "aiInsights": "رؤى الذكاء الاصطناعي",
+    "recommendations": "التوصيات",
+    "charts": {
+      "monthlySpending": "الإنفاق الشهري",
+      "categoryDistribution": "توزيع الفئات",
+      "incomeVsExpenses": "الدخل مقابل المصروفات",
+      "budgetProgress": "تقدم الميزانية"
+    },
+    "insights": {
+      "title": "رؤى الذكاء الاصطناعي",
+      "spendingPattern": "تحليل نمط الإنفاق",
+      "savingsOpportunity": "فرص التوفير",
+      "budgetAlerts": "تنبيهات الميزانية",
+      "trends": "تحليل الاتجاهات"
+    }
+  },
+  "reports": {
+    "title": "التقارير الشهرية",
+    "subtitle": "تحليل مالي شامل",
+    "monthlySummary": "الملخص الشهري",
+    "financialOverview": "نظرة عامة مالية",
+    "budgetPerformance": "أداء الميزانية",
+    "spendingAnalysis": "تحليل الإنفاق",
+    "aiInsights": "رؤى مدعومة بالذكاء الاصطناعي",
+    "goalTracking": "تتبع الأهداف",
+    "exportReport": "تصدير التقرير",
+    "sections": {
+      "income": "الدخل",
+      "expenses": "المصروفات",
+      "savings": "التوفير",
+      "budgets": "الميزانيات",
+      "trends": "الاتجاهات",
+      "recommendations": "التوصيات"
+    }
   },
   "csvImport": {
     "title": "استيراد CSV",
