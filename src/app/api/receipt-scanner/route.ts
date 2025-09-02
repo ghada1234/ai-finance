@@ -153,26 +153,60 @@ function parseReceiptTextManually(text: string): any {
   let receiptNumber = '';
   let address = '';
   
-  // Extract merchant: first non-empty line with letters/numbers
-  merchant = lines.find(l => /[A-Za-z].{2,}/.test(l)) || '';
+  // Extract merchant: look for store names, business names
+  const merchantPatterns = [
+    /^([A-Z][A-Z\s&]+(?:SUPERMARKET|MARKET|STORE|SHOP|RESTAURANT|CAFE))/i,
+    /^([A-Z][A-Z\s&]+)/,
+    /^([A-Za-z][A-Za-z\s&]+)/,
+    /^([A-Za-z][A-Za-z\s&]+(?:\.|$))/
+  ];
   
-  // Extract total: look for patterns like "Total $12.34", "Amount: 12.34", etc.
-  const totalMatch =
-    cleaned.match(/(?:grand\s*)?total[:\s]*([$€£]?\s?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)/i) ||
-    cleaned.match(/amount\s*due[:\s]*([$€£]?\s?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)/i) ||
-    cleaned.match(/balance[:\s]*([$€£]?\s?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)/i) ||
-    cleaned.match(/(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)\s*total/i);
-  
-  if (totalMatch) {
-    total = parseFloat(totalMatch[1].replace(/[$,€£\s]/g, ''));
+  for (const pattern of merchantPatterns) {
+    const match = lines.find(l => pattern.test(l));
+    if (match) {
+      merchant = match.match(pattern)?.[1]?.trim() || '';
+      if (merchant && merchant.length > 2) break;
+    }
   }
   
-  // If no total found, look for the largest number that could be a total
+  // If no merchant found, use first substantial line
+  if (!merchant) {
+    merchant = lines.find(l => /[A-Za-z]{3,}/.test(l) && !/receipt|invoice|date|time|total|thank/i.test(l)) || '';
+  }
+  
+  // Extract total: look for patterns like "Total $12.34", "Amount: 12.34", etc.
+  const totalPatterns = [
+    /(?:grand\s*)?total[:\s]*([$€£]?\s?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)/i,
+    /amount\s*due[:\s]*([$€£]?\s?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)/i,
+    /balance[:\s]*([$€£]?\s?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)/i,
+    /(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)\s*total/i,
+    /total\s*[:\s]*([$€£]?\s?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)/i,
+    /(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)\s*$/, // Last number on line
+    /(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?)/ // Any number (fallback)
+  ];
+  
+  for (const pattern of totalPatterns) {
+    const match = cleaned.match(pattern);
+    if (match) {
+      const potentialTotal = parseFloat(match[1].replace(/[$,€£\s]/g, ''));
+      // Validate that this looks like a reasonable total (not too small, not too large)
+      if (potentialTotal > 0.01 && potentialTotal < 10000) {
+        total = potentialTotal;
+        break;
+      }
+    }
+  }
+  
+  // If still no total found, look for the largest reasonable number
   if (total === 0) {
     const allNumbers = cleaned.match(/\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})?/g);
     if (allNumbers) {
-      const numbers = allNumbers.map(n => parseFloat(n.replace(/[$,€£\s]/g, ''))).sort((a, b) => b - a);
-      total = numbers[0]; // Assume the largest number is the total
+      const numbers = allNumbers.map(n => parseFloat(n.replace(/[$,€£\s]/g, '')))
+        .filter(n => n > 0.01 && n < 10000) // Filter reasonable amounts
+        .sort((a, b) => b - a);
+      if (numbers.length > 0) {
+        total = numbers[0]; // Assume the largest reasonable number is the total
+      }
     }
   }
   
@@ -417,10 +451,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log("POST /api/receipt-scanner - Image data received, length:", imageBase64.length);
+
     // Process the receipt with AI
     const extractedData = await processReceiptWithAI(imageBase64);
 
-    console.log("POST /api/receipt-scanner - Returning extracted data");
+    console.log("POST /api/receipt-scanner - Processing completed, data:", extractedData);
     return NextResponse.json(extractedData, { status: 200 });
   } catch (error) {
     console.error("POST /api/receipt-scanner - Error:", error);
