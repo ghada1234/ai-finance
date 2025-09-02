@@ -445,6 +445,7 @@ export async function POST(request: NextRequest) {
     const { imageBase64 } = body;
 
     if (!imageBase64) {
+      console.log("POST /api/receipt-scanner - No image data received");
       return NextResponse.json(
         { error: "Image data is required" },
         { status: 400 }
@@ -454,6 +455,7 @@ export async function POST(request: NextRequest) {
     console.log("POST /api/receipt-scanner - Image data received, length:", imageBase64.length);
 
     // Process the receipt with AI
+    console.log("POST /api/receipt-scanner - Starting AI processing...");
     const extractedData = await processReceiptWithAI(imageBase64);
 
     console.log("POST /api/receipt-scanner - Processing completed, data:", extractedData);

@@ -126,6 +126,8 @@ interface ReceiptData {
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
+          console.log('Sending image to API, size:', imageBase64.length);
+          
           const response = await fetch('/api/receipt-scanner', {
             method: 'POST',
             headers: {
@@ -137,8 +139,12 @@ interface ReceiptData {
 
           clearTimeout(timeoutId);
 
+          console.log('API response status:', response.status);
+          
           if (!response.ok) {
-            throw new Error(`API Error: ${response.status}`);
+            const errorText = await response.text();
+            console.error('API error response:', errorText);
+            throw new Error(`API Error: ${response.status} - ${errorText}`);
           }
 
           const extractedData = await response.json();
@@ -161,6 +167,7 @@ interface ReceiptData {
           
           // Show more specific error message
           const errorMessage = apiError instanceof Error ? apiError.message : 'Unknown error';
+          
           if (errorMessage.includes('No text extracted')) {
             alert('OCR could not extract text from the image. Please ensure the image is clear and text is readable.');
           } else if (errorMessage.includes('API Error')) {
@@ -169,7 +176,27 @@ interface ReceiptData {
             alert('Receipt processing failed. Please try again.');
           }
           
-          throw apiError; // Re-throw to be caught by outer catch
+          // Show fallback data for testing
+          console.log('Showing fallback data due to API failure');
+          const fallbackData = {
+            merchant: "Sample Store (API Failed)",
+            total: 25.99,
+            date: new Date().toISOString().split('T')[0],
+            items: [
+              { name: "Sample Item", price: 25.99, quantity: 1 }
+            ],
+            category: "Other",
+            confidence: 50,
+            tax: 2.50,
+            subtotal: 23.49,
+            receiptNumber: "12345",
+            address: "123 Sample St, City, State"
+          };
+          
+          setExtractedData(fallbackData);
+          setEditedData(fallbackData);
+          
+          // Don't re-throw, just show the fallback data
         } finally {
           setIsProcessing(false);
           setProcessingProgress(0);
