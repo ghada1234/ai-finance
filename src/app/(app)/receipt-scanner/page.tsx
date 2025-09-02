@@ -150,27 +150,9 @@ interface ReceiptData {
           setExtractedData(extractedData);
           setEditedData(extractedData);
         } catch (apiError) {
-          console.error('API processing failed, using fallback:', apiError);
-          
-          // Fallback: Generate mock data for testing
-          const mockData = {
-            merchant: "Sample Store",
-            total: 25.99,
-            date: new Date().toISOString().split('T')[0],
-            items: [
-              { name: "Sample Item", price: 25.99, quantity: 1 }
-            ],
-            category: "Other",
-            confidence: 75,
-            tax: 2.50,
-            subtotal: 23.49,
-            receiptNumber: "12345",
-            address: "123 Sample St, City, State"
-          };
-          
-          setExtractedData(mockData);
-          setEditedData(mockData);
-          alert('API processing failed. Using sample data for demonstration.');
+          console.error('API processing failed:', apiError);
+          alert('Receipt processing failed. Please try again with a clearer image.');
+          throw apiError; // Re-throw to be caught by outer catch
         } finally {
           setIsProcessing(false);
           setProcessingProgress(0);
@@ -192,8 +174,32 @@ interface ReceiptData {
     setIsSaving(true);
     
     try {
-      // This would save to your API
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Save to transactions API
+      const transactionData = {
+        amount: -editedData.total, // Negative for expenses
+        type: "EXPENSE",
+        description: `${editedData.merchant} - Receipt #${editedData.receiptNumber || 'N/A'}`,
+        date: editedData.date,
+        accountId: "1", // Default account ID
+        categoryId: getCategoryId(editedData.category),
+        isRecurring: false,
+        receiptUrl: previewUrl, // Store the receipt image URL
+        aiProcessed: true
+      };
+
+      const response = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(transactionData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to save transaction: ${response.status}`);
+      }
+
+      const savedTransaction = await response.json();
       
       // Reset form
       setSelectedFile(null);
@@ -202,12 +208,32 @@ interface ReceiptData {
       setEditedData(null);
       setIsEditing(false);
       
-      alert("Transaction saved successfully!");
+      alert(`Transaction saved successfully! ID: ${savedTransaction.id}`);
+      
+      // Optionally redirect to transactions page
+      // window.location.href = '/transactions';
+      
     } catch (error) {
-      alert("Error saving transaction");
+      console.error('Error saving transaction:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Error saving transaction: ${errorMessage}`);
     } finally {
       setIsSaving(false);
     }
+  };
+
+  // Helper function to map category names to IDs
+  const getCategoryId = (categoryName: string): string => {
+    const categoryMap: { [key: string]: string } = {
+      "Food & Dining": "1",
+      "Shopping": "2", 
+      "Transportation": "3",
+      "Entertainment": "4",
+      "Utilities": "5",
+      "Healthcare": "6",
+      "Other": "7"
+    };
+    return categoryMap[categoryName] || "7"; // Default to "Other"
   };
 
   const clearSelection = () => {
