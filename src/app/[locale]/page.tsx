@@ -138,9 +138,10 @@ export default function Home() {
             </div>
             
             <div className="flex justify-center">
-                          <Link href="/en/dashboard">
-              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                {t('hero.cta', 'home')}
+              <Link href="/en/dashboard">
+                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                  {t('hero.cta', 'home')}
+                </Button>
               </Link>
             </div>
         </div>
